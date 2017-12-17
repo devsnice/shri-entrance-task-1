@@ -1,8 +1,8 @@
 const { models } = require('../../models');
 
-const isInstanceExist = instance => {
+const isInstanceExist = (instance, { modelName, id }) => {
   if (!instance) {
-    throw new Error('Not instance with such id');
+    throw new Error(`Not instance of type ${modelName} with id ${id}`);
   }
 
   return true;
@@ -11,7 +11,7 @@ const isInstanceExist = instance => {
 const getInstanceById = async (modelName, id) => {
   const instance = await models[modelName].findById(id);
 
-  if (isInstanceExist(instance)) {
+  if (isInstanceExist(instance, { modelName, id })) {
     return instance;
   }
 };
@@ -69,6 +69,22 @@ module.exports = {
 
     await event.setRoom(roomId);
     await event.setUsers(usersIds);
+
+    return event;
+  },
+
+  addUserToEvent: async (root, { id, userId }) => {
+    const event = await getInstanceById('Event', id);
+    const user = await getInstanceById('User', userId);
+
+    const eventHasThisUser = await event.hasUser(userId);
+
+    if (!eventHasThisUser) {
+      const eventUsers = await event.getUsers();
+      const eventUsersIds = eventUsers.map(user => user.id.toString());
+
+      await event.setUsers([...eventUsersIds, userId.toString()]);
+    }
 
     return event;
   },
