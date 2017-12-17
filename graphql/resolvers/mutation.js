@@ -1,65 +1,107 @@
 const { models } = require('../../models');
 
+const isInstanceExist = instance => {
+  if (!instance) {
+    throw new Error('Not instance with such id');
+  }
+
+  return true;
+};
+
+const getInstanceById = async (modelName, id) => {
+  const instance = await models[modelName].findById(id);
+
+  if (isInstanceExist(instance)) {
+    return instance;
+  }
+};
+
 module.exports = {
   // User
-  createUser(root, { input }) {
-    return models.User.create(input);
+  createUser: async (root, { input }) => {
+    const user = models.User.create(input);
+
+    return user;
   },
 
-  updateUser(root, { id, input }) {
-    return models.User.findById(id).then(user => {
-      return user.update(input);
-    });
+  updateUser: async (root, { id, input }) => {
+    const user = await getInstanceById('User', id);
+
+    await user.update(input);
+
+    return user;
   },
 
-  removeUser(root, { id }) {
-    return models.User.findById(id).then(user => user.destroy());
+  removeUser: async (root, { id }) => {
+    const user = await getInstanceById('User', id);
+
+    await user.destroy();
+
+    return user;
   },
 
   // Room
-  createRoom(root, { input }) {
-    return models.Room.create(input);
+  createRoom: async (root, { input }) => {
+    const room = models.Room.create(input);
+
+    return room;
   },
 
-  updateRoom(root, { id, input }) {
-    return models.Room.findById(id).then(room => {
-      return room.update(input);
-    });
+  updateRoom: async (root, { id, input }) => {
+    const room = await getInstanceById('Room', id);
+
+    await room.update(input);
+
+    return room;
   },
 
-  removeRoom(root, { id }) {
-    return models.Room.findById(id).then(room => room.destroy());
+  removeRoom: async (root, { id }) => {
+    const room = await getInstanceById('Room', id);
+
+    await room.destroy();
+
+    return room;
   },
 
   // Event
-  createEvent(root, { input, usersIds, roomId }) {
-    return models.Event.create(input).then(event => {
-      event.setRoom(roomId);
+  createEvent: async (root, { input, usersIds, roomId }) => {
+    const event = await models.Event.create(input);
 
-      return event.setUsers(usersIds).then(() => event);
-    });
+    await event.setRoom(roomId);
+    await event.setUsers(usersIds);
+
+    return event;
   },
 
-  updateEvent(root, { id, input }) {
-    return models.Event.findById(id).then(event => {
-      return event.update(input);
-    });
+  updateEvent: async (root, { id, input }) => {
+    const event = await getInstanceById('Event', id);
+
+    await event.update(input);
+
+    return event;
   },
 
-  removeUserFromEvent(root, { id, userId }) {
-    return models.Event.findById(id).then(event => {
-      event.removeUser(userId);
-      return event;
-    });
+  removeUserFromEvent: async (root, { id, userId }) => {
+    const event = await getInstanceById('Event', id);
+
+    await event.removeUser(userId);
+
+    return event;
   },
 
-  changeEventRoom(root, { id, roomId }) {
-    return models.Event.findById(id).then(event => {
-      event.setRoom(roomId);
-    });
+  changeEventRoom: async (root, { id, roomId }) => {
+    const event = await getInstanceById('Event', id);
+
+    await event.setRoom(roomId);
+
+    return event;
   },
 
-  removeEvent(root, { id }) {
-    return models.Event.findById(id).then(event => event.destroy());
+  removeEvent: async (root, { id }) => {
+    const event = await getInstanceById('Event', id);
+
+    await event.destroy();
+
+    return event;
   }
 };
