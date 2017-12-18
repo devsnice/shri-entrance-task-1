@@ -11,11 +11,6 @@ input UserInput {
     homeFloor: Int
 }
 
-type UserRoom {
-    id: ID!
-    title: String!
-}
-
 type Query {
   user(id: ID!): User
   users: [User]
