@@ -1,6 +1,6 @@
 const { models, sequelize } = require('./models');
 
-function createData () {
+function createData() {
   let usersPromise = models.User.bulkCreate([
     {
       login: 'veged',
@@ -72,12 +72,14 @@ function createData () {
   ]);
 
   Promise.all([usersPromise, roomsPromise, eventsPromise])
-    .then(() => Promise.all([
-      models.User.findAll(),
-      models.Room.findAll(),
-      models.Event.findAll()
-    ]))
-    .then(function ([users, rooms, events]) {
+    .then(() =>
+      Promise.all([
+        models.User.findAll(),
+        models.Room.findAll(),
+        models.Event.findAll()
+      ])
+    )
+    .then(function([users, rooms, events]) {
       let promises = [];
       promises.push(events[0].setRoom(rooms[0]));
       promises.push(events[1].setRoom(rooms[1]));
@@ -91,5 +93,4 @@ function createData () {
     });
 }
 
-sequelize.sync()
-  .then(createData);
+sequelize.sync().then(createData);

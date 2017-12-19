@@ -1,15 +1,15 @@
 module.exports = `
 type Room {
-    id: ID!
-    title: String!
-    capacity: Int!
-    floor: Int!
+  id: ID!
+  title: String!
+  capacity: Int!
+  floor: Int!
 }
 
 input RoomInput {
-    title: String!
-    capacity: Int!
-    floor: Int!
+  title: String!
+  capacity: Int!
+  floor: Int!
 }
 
 type Query {

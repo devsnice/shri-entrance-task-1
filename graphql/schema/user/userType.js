@@ -1,14 +1,14 @@
 module.exports = `
 type User {
-    id: ID!
-    login: String!
-    homeFloor: Int
-    avatarUrl: String!
+  id: ID!
+  login: String!
+  homeFloor: Int
+  avatarUrl: String!
 }
 
 input UserInput {   
-    login: String!
-    homeFloor: Int
+  login: String!
+  homeFloor: Int
 }
 
 type Query {
