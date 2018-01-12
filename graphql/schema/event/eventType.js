@@ -17,7 +17,7 @@ input EventInput {
 
 type Query {
   event(id: ID!): Event
-  events: [Event]
+  events(dateStart: Date, dateEnd: Date): [Event]
 }
 
 type Mutation {
